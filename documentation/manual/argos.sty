@@ -1,0 +1,37 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{argos}
+
+\usepackage{afterpage}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{charter}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{xspace}
+\usepackage[pdftex]{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{calc,arrows,shapes,matrix,positioning,scopes,decorations.pathmorphing,shadows,fit,backgrounds}
+\usepackage{subfigure}
+%\usepackage[pdftex]{thumbpdf}
+% hyperref MUST be the last package inserted
+\usepackage[pdftex,hypertexnames=false]{hyperref}
+\usepackage{listings}
+% algorithm and algorithmic conflict with hyperref if inserted before it
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+
+\newcommand{\argos}{ARGoS\xspace}
+\newcommand{\todo}[1]{\textbf{TODO: {#1}}\xspace}
+
+\hypersetup{
+  bookmarksopen=true,
+  breaklinks=true,
+  colorlinks=true,
+  linkcolor=blue,
+  anchorcolor=blue,
+  citecolor=blue,
+  filecolor=blue,
+  menucolor=blue,
+  urlcolor=blue
+}

@@ -1,0 +1,828 @@
+\documentclass[a4paper]{article}
+
+\usepackage{booktabs}
+\usepackage{charter}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{listings}
+\usepackage{boxedminipage}
+\usepackage[pdftex]{hyperref}
+
+\hypersetup{
+  pdftitle={ARGoS Coding Conventions},
+  pdfauthor={Carlo Pinciroli},
+  bookmarksopen=true,
+  breaklinks=true,
+  colorlinks=true,
+  linkcolor=blue,
+  anchorcolor=blue,
+  citecolor=blue,
+  filecolor=blue,
+  menucolor=blue,
+  urlcolor=blue
+}
+
+\newcommand{\argos}{ARGoS\xspace}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\definecolor{WarningBackgroundColor}{rgb}{0.8,0.8,0.8}
+
+\makeatletter\newenvironment{warning}%
+{%
+  \noindent%
+  \begin{center}%
+  \begin{lrbox}{\@tempboxa}%
+  \begin{minipage}{.1\textwidth}\begin{center}{\huge {\bf !}}\end{center}\end{minipage}%
+  \begin{minipage}{0.9\textwidth}%
+}%
+{%
+  \end{minipage}%
+  \end{lrbox}%
+  \colorbox{WarningBackgroundColor}{\usebox{\@tempboxa}}%
+  \end{center}%
+}\makeatother
+
+\begin{document}
+
+\begin{titlepage}
+  \begin{center}
+    {\sc \LARGE \argos}\\[0.5cm]
+    {\sc \LARGE Autonomous Robots GO Swarming}
+    \vfill
+    \HRule\\[0.3cm]
+    {\huge \bfseries Coding Conventions}\\[0.3cm]
+    \HRule
+    \vfill
+    {\LARGE Carlo {\sc Pinciroli}}\\[0.5cm]
+    <{\tt \LARGE cpinciro@ulb.ac.be}>
+    \vfill
+    {\LARGE Version 1.0}\\[0.5cm]
+    {\LARGE May 10th, 2010}
+  \end{center}
+\end{titlepage}
+\begin{flushright}
+  \vspace*{\fill}
+  \begin{minipage}{0.5\textwidth}
+    \begin{flushright}
+      {\it There are two ways to write error-free programs.  Only the
+        third one works.}\\[1.5cm]
+      {\it If at first you don't succeed, you must be a
+        programmer.}\\[1.5cm]
+      {\it Do or do not. There is no try.}\\[1.5cm]
+      {\it Normally it works.}
+    \end{flushright}
+  \end{minipage}
+  \vspace*{\fill}
+\end{flushright}
+\newpage
+\tableofcontents
+\newpage
+
+\lstset{
+  language=C++,
+  basicstyle=\footnotesize,
+  frame=leftline,
+  xleftmargin=1em,
+  framexleftmargin=0.3em,
+  framerule=2pt
+}
+
+\section{Introduction}
+\label{sec:introduction}
+This document describes the coding guidelines to follow when
+developing code for \argos.
+
+In this last phase of the development, it is very important to follow these
+guidelines. The code will be realeased soon and it must provide a
+minimum level of clarity and quality to be usable by external
+people. The aim is to give the impression that the code was developed
+by one person only, even though it is, in fact, a team work.
+
+Besides clarity for external audience, this coding guidelines make it
+simpler for everybody to know how things are structured, with obvious
+benefits in terms of maintainability and ease of bug solving.
+
+\section{Naming Conventions}
+\label{sec:naming_conventions}
+In the code, we follow a custom version of the Hungarian Notation.
+
+\subsection{Variables}
+\label{subsec:variables}
+The Hungarian notation encodes the {\it scope} and the {\it type} of a
+variable in its name. The scope is defined by where a variable is
+declared~--- variables can be class members, function parameters or
+local variables. In Table~\ref{table:var_naming} we report examples of
+variable definitions.
+%
+\begin{table}[b]
+  \caption{Examples of variable naming.}
+  \label{table:var_naming}
+  \centering
+  \begin{footnotesize}
+    \begin{tabular}{l l l l}
+      \toprule
+      {\it Type} & {\it Class Member} & {\it Local Variable} & {\it Function Parameter} \\
+      \midrule
+      {\it UIntXX} & m\_unMyVariable & unMyVariable & un\_my\_variable \\
+      {\it SIntXX} & m\_nMyVariable & nMyVariable & n\_my\_variable \\
+      {\it Real} & m\_fMyVariable & fMyVariable & f\_my\_variable \\
+      {\it Boolean} & m\_bMyVariable & bMyVariable & b\_my\_variable \\
+      {\it STL Vector} & m\_vecMyVariable & vecMyVariable & vec\_my\_variable \\
+      {\it STL Map} & m\_mapMyVariable & mapMyVariable & map\_my\_variable \\
+      {\it STL List} & m\_listMyVariable & listMyVariable & list\_my\_variable \\
+      {\it STL Iterators} & m\_itMyVariable & itMyVariable & it\_my\_variable \\
+      {\it String} & m\_strMyVariable & strMyVariable & str\_my\_variable \\
+      {\it Class} & m\_cMyVariable & cMyVariable & c\_my\_variable \\
+      {\it Struct} & m\_sMyVariable & sMyVariable & s\_my\_variable \\
+      {\it Enum} & m\_eMyVariable & eMyVariable & e\_my\_variable \\
+      {\it Union} & m\_uMyVariable & uMyVariable & u\_my\_variable \\
+      {\it Typdef'd type} & m\_tMyVariable & tMyVariable & t\_my\_variable \\
+      \bottomrule
+    \end{tabular}
+  \end{footnotesize}
+\end{table}
+The reported examples apply also to variable references, following the C++
+interpretation stating that a reference {\it is} the referenced
+object. For example, this is a correct declaration:
+%
+\begin{lstlisting}
+void MyFunction(const CMyClass& c_var);
+\end{lstlisting}
+%
+On the contrary, for pointers, the Hungarian Notation prepends a 'p'
+to the type part of the variable name, as shown in
+Table~\ref{table:pointer_var_naming}.
+\begin{table}[t]
+  \caption{Examples of pointer variable naming.}
+  \label{table:pointer_var_naming}
+  \centering
+  \begin{footnotesize}
+    \begin{tabular}{l l l l}
+      \toprule
+      {\it Type} & {\it Class Member} & {\it Local Variable} & {\it Function Parameter} \\
+      \midrule
+      {\it UIntXX} & m\_punMyVariable & punMyVariable & pun\_my\_variable \\
+      {\it SIntXX} & m\_pnMyVariable & pnMyVariable & pn\_my\_variable \\
+      {\it Real} & m\_pfMyVariable & pfMyVariable & pf\_my\_variable \\
+      {\it Boolean} & m\_pbMyVariable & pbMyVariable & pb\_my\_variable \\
+      {\it STL Vector} & m\_pvecMyVariable & pvecMyVariable & pvec\_my\_variable \\
+      {\it STL Map} & m\_pmapMyVariable & pmapMyVariable & pmap\_my\_variable \\
+      {\it STL List} & m\_plistMyVariable & plistMyVariable & plist\_my\_variable \\
+      {\it STL Iterators} & m\_pitMyVariable & pitMyVariable & pit\_my\_variable \\
+      {\it String} & m\_pstrMyVariable & pstrMyVariable & pstr\_my\_variable \\
+      {\it Class} & m\_pcMyVariable & pcMyVariable & pc\_my\_variable \\
+      {\it Struct} & m\_psMyVariable & psMyVariable & ps\_my\_variable \\
+      {\it Enum} & m\_peMyVariable & peMyVariable & pe\_my\_variable \\
+      {\it Union} & m\_puMyVariable & puMyVariable & pu\_my\_variable \\
+      {\it Typdef'd type} & m\_ptMyVariable & ptMyVariable & pt\_my\_variable \\
+      \bottomrule
+    \end{tabular}
+  \end{footnotesize}
+\end{table}
+
+\subsection{Types}
+\label{subsec:types}
+The Hungarian Notation applies also to user defined types. In Table~\ref{table:type_naming}
+we report some examples.
+\begin{table}[t]
+  \caption{Examples of user defined type naming.}
+  \label{table:type_naming}
+  \centering
+  \begin{footnotesize}
+    \begin{tabular}{l l}
+      \toprule
+      {\it Type} & {\it Declaration}\\
+      \midrule
+      {\it Class} & \lstinline!class CMyClass {...};! \\
+      {\it Template Class} & \lstinline!template <typename T> class CMyClass {...};! \\
+      {\it Struct} & \lstinline!struct SMyStruct {...};! \\
+      {\it Enum} & \lstinline!enum EMyEnum {...};! \\
+      {\it Union} & \lstinline!union UMyUnion {...};! \\
+      {\it Typedef'd type} & \lstinline!typedef char TMyType;! \\
+      \bottomrule
+    \end{tabular}
+  \end{footnotesize}
+\end{table}
+
+The only exception to the stated rules are the following
+types\footnote{Defined in file {\tt
+argos2/common/utility/datatypes/datatypes.h}.}: {\it UInt8}, {\it
+UInt16}, {\it UInt32}, {\it UInt64}, {\it SInt8}, {\it SInt16}, {\it
+SInt32}, {\it SInt64}, {\it Real}. These types are wrappers of the C++
+primitive types typedef'd to ensure portability. Since these types are
+used very often, they do not follow the convention to save characters.
+
+The {\it U} or {\it S} at the beginning of the name stand for {\it
+unsigned} or {\it signed}; while the number at the end of them
+indicates their size in bits. The {\it Real} type corresponds to
+either the {\it float} or {\it double} primitive types, depending on
+the platform on which the code is compiled.
+
+\begin{warning}
+  {\bf Never} use the unwrapped C++ primitive types, such as {\it int},
+  {\it unsigned int}, {\it float} and the likes. {\bf Always} use the
+  wrapped types, as this ensures portability.
+\end{warning}
+
+Furthermore, for all the classes in the {\it control interface}, we follow a
+slightly different convention---all the classes must be preceded
+by {\it CCI\_} instead of just {\it C}, for example:
+\begin{lstlisting}
+class CCI_MyClass {
+  ...
+};
+\end{lstlisting}
+
+\subsection{Constants}
+\label{subsec:constants}
+Constants do no follow the Hungarian Notation. They are defined in all
+capitals and the words are separated by underscores. For example:
+\begin{lstlisting}
+class CMyClass {
+  public:
+    static const UInt32 MY_FIRST_CONSTANT;
+    static const Real MY_SECOND_CONSTANT;
+};
+\end{lstlisting}
+
+\subsection{Functions and Class Members}
+\label{subsec:functions}
+Functions and class members follow the same convention. Their names
+start with a capital letter, and words are separated by capital
+letters. Class get/set methods are prepended by the {\it Get}/{\it
+Set} sequence and take the name of the variable their refer to. If a
+get method refers to a boolean flag, it is prepended by the {\it Is}
+sequence instead. Examples:
+\begin{lstlisting}
+class CMyClass {
+  public:
+    void ThisIsAMethod();
+    inline UInt8 GetVar() const
+    {
+      return m_unVar;
+    }
+    inline void SetVar(UInt8 un_var)
+    {
+      m_unVar = un_var;
+    }
+    inline bool IsFlag() const
+    {
+      return m_bFlag;
+    }
+    inline bool SetFlag(bool b_flag)
+    {
+      m_bFlag = b_flag;
+    }
+  private:
+    UInt8 m_unVar;
+    bool m_bFlag;
+};
+
+Real Normalize(Real f_min,
+               Real f_max,
+               Real f_value)
+{
+  ...
+}
+\end{lstlisting}
+
+\subsection{Files and Directories}
+\label{subsec:files}
+File names and directories are all in lower case and words are
+separated by underscores. Header files have extension \verb!.h! and
+implementation files have extension \verb!.cpp!.  For example,
+\verb!file_name.h! is right, while \verb!fileName.h!,
+\verb!File_Name.h!, \verb!File_name.h!  and \verb!FileName.h! are
+wrong.
+
+\section{Formatting Conventions}
+\label{sec:formatting}
+
+\subsection{Generalities}
+\label{subsec:generalities}
+When writing code, it is important to comply with also the formatting
+guidelines that follow.
+\begin{warning}
+  Indentation is done with {\bf spaces}. Each level is {\bf four} spaces long.
+\end{warning}
+\begin{warning}
+  The code formatting style is {\bf Stroustroup}. Namespaces are indented.
+\end{warning}
+
+All files must include at the very beginning the GPL license information,
+typeset {\bf exactly} as follows:
+\begin{footnotesize}
+\begin{verbatim}
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+\end{verbatim}
+\end{footnotesize}
+
+\subsection{Header Files}
+\label{subsec:headers}
+After the licensing information, a header file must contain a macro to
+avoid multiple inclusion. The name of the defined macro must match the
+file name, but written all capital:
+%
+\begin{lstlisting}
+#ifndef FILE_NAME_H
+#define FILE_NAME_H
+\end{lstlisting}
+%
+If the file defines classes, there may be problems in inclusion. To
+avoid them once and for all, include the following statement after the macro:
+%
+\begin{lstlisting}
+namespace argos {
+  class CMyClass;
+}
+\end{lstlisting}
+%
+and only {\bf after} this line start including other stuff:
+%
+\begin{lstlisting}
+#include <argos2/common/utility/datatypes/datatypes.h>
+#include <string>
+\end{lstlisting}
+%
+About inclusions, there is an important thing to bear in mind:
+\begin{warning}
+  When including \argos headers from a \verb!.h! file, {\bf always}
+  specify the complete path and use the \verb!<...>! syntax, as shown in the
+  example above.
+\end{warning}
+The reason for this is that \argos can be also installed system-wide in locations that
+cannot be foreseen. If you do not follow this rule, user code won't compile
+correctly because some headers won't be found.
+
+After the includes, all \argos code should be included in the \verb!argos!
+namespace:
+%
+\begin{lstlisting}
+namespace argos {
+  class CMyClass {
+    ...
+  };
+}
+\end{lstlisting}
+%
+End the file by closing the macro declaration:
+%
+\begin{lstlisting}
+#endif
+\end{lstlisting}
+
+\subsection{Implementation Files}
+\label{subsec:implementations}
+After the licensing information, implementation files should include
+the needed headers. In implementation files, the rule to include
+headers is as follows: if a file is contained in the current directory
+or in a subdirectory, use the \lstinline!#include "..."! syntax;
+otherwise use the \lstinline!#include <argos2/...>! syntax.
+
+After the includes, all code should be declared in a
+\lstinline!namespace argos {...}! block.
+%
+\begin{warning}
+  {\bf Never} use the clause \lstinline!using namespace argos!.
+\end{warning}
+
+The individual elements should be separated by a comment line
+containing forty {\it *}. An example to show all this:
+%
+\begin{lstlisting}
+#include "my_header_file.h"
+#include "subdir/another_header.h"
+#include <argos2/common/utility/string_utilities.h>
+
+namespace argos {
+
+  /****************************************/
+  /****************************************/
+
+  const UInt32 CMyClass::MY_FIRST_CONSTANT  = 56;
+  const Real   CMyClass::MY_SECOND_CONSTANT = 37.472;
+
+  /****************************************/
+  /****************************************/
+
+  void CMyClass::AMethod(const std::string& str_param)
+  {
+    ...
+  }
+
+  /****************************************/
+  /****************************************/
+
+  UInt32 CMyClass::AnotherMethod()
+  {
+    ...
+  }
+
+  /****************************************/
+  /****************************************/
+
+}
+\end{lstlisting}
+
+\section{Coding Tips}
+\label{sec:coding}
+
+\subsection{Using Namespaces}
+\label{subsec:namespaces}
+\begin{warning}
+  {\bf Never} employ the clause \lstinline!using namespace ...!.
+\end{warning}
+There is a number of reasons for this to be enforced. First of all,
+clarity: specifying \lstinline!std::string! is more informative than
+just saying \lstinline!string!~--- it says where the definition comes
+from.
+
+Furthermore, it makes name clashes less probable. For instance, it
+happens often that libraries wrap the primitive types for portability
+and often the used names are colliding. If the programmers of the
+library have been smart enough to define their own namespaces, there
+would no problem using identical symbols. Let us see the problem with
+an example:
+%
+\begin{lstlisting}
+#include <library1.h> // defines a type uint8
+#include <library2.h> // defines a type uint8 too
+
+using namespace lib1;
+using namespace lib2;
+
+...
+
+void MyFunction()
+{
+  uint8 unVar = 0; // which uint8 are we using here? -> ERROR!
+}
+\end{lstlisting}
+%
+With the above stated rule, the ambiguity disappears:
+%
+\begin{lstlisting}
+#include <library1.h> // defines a type uint8
+#include <library2.h> // defines a type uint8 too
+
+...
+
+void MyFunction()
+{
+  lib1::uint8 unVar1 = 0; // no ambiguity now -> OK!
+  lib2::uint8 unVar2 = 0; // no ambiguity now -> OK!
+}
+\end{lstlisting}
+
+\subsection{Copy, Reference or Pointer?}
+\label{subsec:value_reference_pointer}
+The choice among copy, reference or pointer depends on a few factors.
+
+\subsubsection{Parameter Passing and Returning}
+Let us consider the case of parameter passing.  The main choice factor
+in this case is optimization. Strings, vectors, classes and structs
+are usually large constructs, and passing them by copy can be very
+time consuming. Thus, for them, passing by copy should be avoided.
+%
+\begin{warning}
+  Pass and return by copy {\bf only} the primitive types: {\it
+    UInt8}, {\it UInt16}, {\it UInt32}, {\it UInt64}, {\it SInt8}, {\it
+    SInt16}, {\it SInt32}, {\it SInt64}, {\it Real} and {\it bool}.
+\end{warning}
+%
+If not by copy, should the choice be pointers or references? The
+differences between the two are that pointers can have the {\it NULL}
+value, whereas references cannot, and pointers are usually more likely
+to confuse people due to the necessity to dereferenciate them to
+obtain their value (the {\it *} operator). Therefore, unless you know
+what you are doing, follow this rule:
+\begin{warning}
+  For structured types, {\bf always} pass and return by reference.
+\end{warning}
+An example:
+\begin{lstlisting}
+class CMyClass { ... };
+
+class CAnotherClass {
+  public:
+    // Primitive type -> return by copy
+    inline UInt64 GetCounter() const
+    {
+      return m_unCounter;
+    }
+    // Primitive type -> pass by copy
+    inline void SetCounter(UInt64 un_counter)
+    {
+      m_unCounter = un_counter;
+    }
+    // Complex type -> return by const reference
+    inline const std::string& GetId() const
+    {
+      return m_strId;
+    }
+    // Complex type -> pass by const reference
+    inline void SetId(const std::string& str_id)
+    {
+      m_strId = str_id;
+    }
+    // Complex type -> return by const reference
+    inline const CMyClass& GetMyClass() const
+    {
+      return *m_pcMyClass;
+    }
+    // Complex type -> pass by const reference
+    inline void SetMyClass(const CMyClass& c_my_class)
+    {
+      m_pcMyClass = &c_my_class; // this works because
+                                 // a reference to a class
+                                 // _is_ the original class!
+    }
+  private:
+    UInt64 m_unCounter;
+    std::string m_strId;
+    CMyClass* m_pcMyClass;
+};
+\end{lstlisting}
+
+\subsubsection{Storing}
+Let's say you have a class like the above example and you have to
+choose among storing a variable (``by copy'') or referencing it
+(reference or pointer). What do you choose?
+
+The main question to ask yourself is whether the variable references
+to something that is integral part of your class or not. If the answer
+is `yes', then prefer storing by copy. See, in the example above, the
+variables \lstinline!m_unCounter! and \lstinline!m_strId!.  With
+primitive types this is easy. Unfortunately, with structured types,
+the thing gets a little more complex. Let's say you have a class {\it
+C} and a class {\it D} that derives from it. If you store by copy
+with {\it C}, you lose polymorphism. Therefore, the choice should fall
+on a reference or a pointer. Which of the two?
+
+Furthermore, if the answer to the previous question was `no', the
+choice falls again on references or pointers, but which one?
+
+The discriminant here is that references cannot be {\it NULL}. If you
+declare an attribute to be a reference to something, you must have
+that something when the class is created. To be clearer, see this
+example:
+%
+\begin{lstlisting}
+class CMyClass { ... };
+
+class CAnotherClass {
+  public:
+    // Bad constructor: the references is not initialized -> ERROR
+    CAnotherClass()
+    {
+    }
+    // Good constructor: the references is initialized -> OK
+    CAnotherClass(CMyClass& c_my_class) :
+      m_cMyClass(c_my_class)
+    {
+    }
+  private:
+    CMyClass& m_cMyClass;
+};
+\end{lstlisting}
+%
+With a pointer you don't have this problem:
+%
+\begin{lstlisting}
+class CMyClass { ... };
+
+class CAnotherClass {
+  public:
+    // Good constructor: the pointer is initialized to NULL
+    CAnotherClass() :
+      m_pcMyClass(NULL)
+    {
+    }
+    // Good constructor: the pointer is initialized to something
+    CAnotherClass(const CMyClass& c_my_class) :
+      m_pcMyClass(&c_my_class)
+    {
+    }
+  private:
+    CMyClass* m_pcMyClass;
+};
+\end{lstlisting}
+%
+In \argos, we generally opted for pointers:
+\begin{warning}
+  When an attribute refers to an external structured type, {\bf
+    always} prefer pointers.
+\end{warning}
+
+\subsection{Is {\it const} Really Necessary?}
+\label{subsec:const}
+The short answer is yes. The long answer is yeeeeeeeeees. Now for the
+reasons.
+
+A function can be seen as a service. Its declaration is a sort of
+contract between the user and the provider. If the two respect the
+contract, both get the right result. A fundamental part of this
+contract is what to do with the exchanged objects: the user passes
+some of his objects and needs to know whether or not they are going
+to be changed. The same applies to the function's return values: can
+the user change it, once received, or not?
+
+As a consequence of such contract, in a class, methods can be roughly
+divided in two categories: {\it inspectors} and {\it
+modifiers}. Inspectors just view the content of a class, but promise
+not to change it. On the contrary, modifiers are meant to change it.
+
+The {\it const} keyword exists to make all this possible, with the
+added value that you can spot contract breaches at compile
+time. Unfortunately, the definition of {\it const} in C++ is one of
+the most shamelessly confusing a human mind has ever imagined. The
+first thing to remember is that {\it const} refers to what {\it
+precedes} it. Some examples:
+%
+\begin{lstlisting}
+SInt8  const  nVar;  // const signed integer
+SInt8* const  pnVar; // const pointer to signed integer (1)
+SInt8  const* pnVar; // pointer to a const signed integer (2)
+\end{lstlisting}
+%
+The examples marked with (1) and (2) are tricky. The first says: you
+can change the value pointed to by \lstinline!pnVar!, but you cannot
+change the pointer itself. In other words:
+%
+\begin{lstlisting}
+SInt8 nVar1, nVar2;
+SInt8* const pnVar(&nVar1); // creation of the variable -> OK
+*pnVar = 10;                // setting the value -> OK
+pnVar = &nVar2;             // setting the pointed address -> ERROR!
+\end{lstlisting}
+%
+Case (2) works in the opposite way: you can change the pointed address,
+but you cannot change the value you find there:
+%
+\begin{lstlisting}
+SInt8 nVar1, nVar2;
+SInt8 const* pnVar(&nVar1); // creation of the variable -> OK
+pnVar = &nVar2;             // setting the pointed address -> OK
+*pnVar = 10;                // setting the value -> ERROR!
+\end{lstlisting}
+%
+Clearly, you can define a constant pointer to a constant variable like this:
+%
+\begin{lstlisting}
+SInt8 const * const pnVar;
+\end{lstlisting}
+%
+For what concerns references, you have to remember that a reference
+{\it is} the referenced object. Therefore:
+%
+\begin{lstlisting}
+SInt8  const& nVar; // reference to a const signed integer -> OK
+SInt8& const  nVar; // const reference to signed integer -> MEANINGLESS
+                    // because it corresponds to this:
+SInt8  const  nVar; 
+\end{lstlisting}
+%
+To make it simpler for programmers coming from other languages and
+more confusing for everybody else, {\it const} can also be used in the
+following {\it degenerate} form:
+%
+\begin{lstlisting}
+const SInt8  nVar; // const signed integer
+const SInt8& nVar; // reference to a const signed integer
+\end{lstlisting}
+%
+In \argos, we prefer this latter, degenerate form.
+
+Back to the uses of {\it const}, class inspectors and modifiers are
+declared as follows:
+\begin{lstlisting}
+class CMyClass {
+  public:
+    void Inspector() const
+    {
+      ...
+    }
+    void Modifier()
+    {
+      ...
+    }
+};
+\end{lstlisting}
+Recalling the discussion and about copies, references and pointers
+(Section~\ref{subsec:value_reference_pointer}), now we can fully
+appreciate this example:
+%
+\begin{lstlisting}
+class CARGoSEntity {
+  public:
+    // inspector, return const reference
+    inline const CVector3& GetPosition() const
+    {
+      return m_cPosition;
+    }
+    // modifier, pass const reference
+    inline void SetPosition(const CVector3& c_position)
+    {
+      m_cPosition = c_position;
+    }
+    // inspector, return copy
+    inline Real GetOrientation() const
+    {
+      return m_fOrientation;
+    }
+    // modifier, pass copy
+    inline void SetOrientation(Real f_orientation)
+    {
+      m_fOrientation = f_orientation;
+    }
+  private:
+    CVector3 m_cPosition;
+    Real m_fOrientation;
+};
+\end{lstlisting}
+
+\subsection{Why and When to Inline}
+\label{subsec:inline}
+In a nutshell, inlining a function means to copy its content in the
+place where it's called. This saves the cost to perform a function
+call, which is quite expensive. For this reason, inlining may be a
+pretty attractive optimization tool.
+
+The decision whether or not to inline a function is ultimately
+performed by the compiler, but the compiler doesn't do it if you don't
+mark the possible candidates. Not all methods are good
+candidates. Short functions of few, simple lines are the best,
+especially if these functions are called often.
+\begin{warning}
+  {\bf Always} inline a class' getters and setters.
+\end{warning}
+Too much inlining is harmful. A method, to be inlineable, must be
+declared in the \verb!.h! file. If you do it for too many methods, you
+break the {\it information hiding} principle and render the header
+file difficult to read.
+
+Furthermore, too much inlining has a performance hit. In fact, when a
+method is inlined, the code of the caller grows and may exceed the
+size of a memory page, thus obliging the OS to load and unload memory
+pages to fetch the necessary code. For this reason, once again, inline
+only few small functions.
+\begin{warning}
+  {\bf Never} inline methods that include loops.
+\end{warning}
+
+\subsection{You Have a New Friend: {\it typedef}}
+\label{subsec:typedef}
+Sometimes functions exchange complex structures, such as the
+following:
+\begin{lstlisting}
+std::map<std::string, Real> mapMyFancyStructure;
+\end{lstlisting}
+Remembering the definition of that map is though, especially if there
+are other similar definitions for other things. And what if you find a
+better way to store your data, and that map changes definition? You'd
+have to change all the code that refers to it---a nightmare.
+
+Compare this example:
+%
+\begin{lstlisting}
+void DoSomething(std::map<std::string, Real>& map_my_fancy_structure)
+{
+  ...
+}
+\end{lstlisting}
+%
+with this one:
+%
+\begin{lstlisting}
+typedef std::map<std::string, Real> TMyFancyStructure;
+
+void DoSomething(TMyFancyStructure& t_my_fancy_structure)
+{
+  ...
+}
+\end{lstlisting}
+%
+The second is much more readable and easier to use and maintain.
+\begin{warning}
+  {\bf Always} typedef complex type definitions, such as maps and
+  vectors.
+\end{warning}
+Notice that unlikely to what happens in C, when you declare a union,
+an enum or a struct, you automatically typedef it.
+
+\end{document}

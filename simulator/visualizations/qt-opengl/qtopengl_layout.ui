@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Carlo Pinciroli</author>
+ <class>QTOpenGLMainWindow</class>
+ <widget class="QMainWindow" name="QTOpenGLMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>ARGoS v2.0</string>
+  </property>
+  <widget class="QWidget" name="MainWidget">
+   <widget class="QTabWidget" name="TabWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>800</width>
+      <height>571</height>
+     </rect>
+    </property>
+    <property name="tabPosition">
+     <enum>QTabWidget::North</enum>
+    </property>
+    <property name="tabShape">
+     <enum>QTabWidget::Rounded</enum>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <property name="tabsClosable">
+     <bool>false</bool>
+    </property>
+    <property name="movable">
+     <bool>false</bool>
+    </property>
+    <widget class="QWidget" name="RunTab">
+     <attribute name="title">
+      <string>Run</string>
+     </attribute>
+     <widget class="argos::CQTOpenGLWidget" name="OpenGLWidget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>790</width>
+        <height>481</height>
+       </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>OpenHandCursor</cursorShape>
+      </property>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>490</y>
+        <width>791</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="ControlsLayout">
+       <item>
+        <widget class="QPushButton" name="PlayButton">
+         <property name="toolTip">
+          <string>Play simulation</string>
+         </property>
+         <property name="text">
+          <string>Play</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="PauseStepButton">
+         <property name="toolTip">
+          <string>Pause/step simulation</string>
+         </property>
+         <property name="text">
+          <string>Pause/Step</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="ResetButton">
+         <property name="toolTip">
+          <string>Reset simulation</string>
+         </property>
+         <property name="text">
+          <string>Reset</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="CaptureButton">
+         <property name="toolTip">
+          <string>Toggle frame capturing</string>
+         </property>
+         <property name="text">
+          <string>Capture</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLCDNumber" name="CurrentStepLCD">
+         <property name="toolTip">
+          <string>Current step</string>
+         </property>
+         <property name="numDigits">
+          <number>6</number>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="EditTab">
+     <attribute name="title">
+      <string>Edit</string>
+     </attribute>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>argos::CQTOpenGLWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">qtopengl_widget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

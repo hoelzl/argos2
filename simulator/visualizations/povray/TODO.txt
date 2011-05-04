@@ -1,0 +1,31 @@
+
+POVRAY (FOOTBOT MODEL)
+====================
+
+- Try to use bounded by / clippping by to lessen the rendering time
+- better grippers (gears)
+- moving treels / new treels
+
+- check the glass_old.inc warning that appear when rendering the footbot
+
+
+POVRAY (EYEBOT MODEL)
+====================
+- camera can only pan and cannot tilt
+- add RAb sensors and emitters
+- the main body is still a box. add more holes and stuff...
+
+
+POVRAY Renderer
+====================
+- comment code
+- show how things can be tested by the user
+- flying cameras
+- define the standard environment
+- show as tag
+- different environmental textures
+
+
+Scripts
+==================
+- render_all_frames_on_cluster.sh script does not check whether the passed folder exists.

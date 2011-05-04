@@ -1,0 +1,130 @@
+\lstset{
+  language=XML,
+  basicstyle=\footnotesize,
+  frame=leftline,
+  xleftmargin=1em,
+  framexleftmargin=0.3em,
+  framerule=2pt
+}
+
+\chapter{The XML Configuration File}
+To run a simulation, the user must provide a correct XML configuration
+file. Such file serves diverse purposes: describing the static layout
+of the arena, placing the robots, declaring which controllers to use,
+and more. In the following we will see how this file is organized.
+
+\section{The General Structure}
+The XML configuration file of \argos is composed of 5 required section
+and 2 optional ones:
+\begin{description}
+\item[\texttt{framework} (req):] here you set some internal parameters of \argos;
+\item[\texttt{controllers} (req):] a list of the controllers to use in the
+  experiment, along with a specification of their configuration;
+\item[\texttt{arena} (req):] contains the objects that populate the simulated
+  space (i.e., their position, orientation, ...);
+\item[\texttt{physics\_engines} (req):] a list of the physics engines to use in
+  the environment;
+\item[\texttt{arena\_physics} (req):] the mapping between objects in the
+  simulated space and the physics engines. Mobile entities can only
+  belong to one physics engine, while immobile entities usually belong
+  to multiple engines;
+\item[\texttt{visualization} (opt):] if this section is present, the selected
+  visualization is loaded. Otherwise, \argos runs silently.
+\item[\texttt{loop\_functions} (opt):] if this section is present, the
+  user-defined that contains the dynamic aspects of the experiment is
+  loaded.
+\end{description}
+
+\subsection{The \texttt{framework} Section}
+This section has two tags: \texttt{system} and
+\texttt{experiment}. Let's see an example:
+\begin{lstlisting}
+<framework>
+  <system threads="2" />
+  <experiment length="70"
+              ticks_per_second="10"
+              random_seed="124" />
+</framework>
+\end{lstlisting}
+The \texttt{system} tag currently contains only one attribute,
+\texttt{threads}, that stores the number of slave threads used by
+\argos for the computation. If you set it to zero, no threads are
+employed. If you set it to a number $N > 0$, $N$ slave threads are
+used. Performance evaluation shows that it makes sense to use threads
+only when the number of robots to simulate is larger than about
+100. Below this threshold, the cost of managing the threads exceeds
+the benefits. In case you want to use threads, for maximum performance
+it is better to set the number of threads equal to the number of cores
+present in your system.
+
+The \texttt{experiment} section is used to specify some general
+aspects of the simulation. The \texttt{length} attribute contains the
+desired lenght of the experiments in seconds. If you set it to zero,
+the experiment runs infinitely, or until another custom ending
+condition is met as specified in the \texttt{IsExperimentFinished()}
+method in the loop functions (for more information, see
+Chapter~\ref{cpt:loop_functions}). The \texttt{ticks\_per\_second}
+attribute specifies how many control steps (ticks) are executed per
+second. This value is usually set to 10, which corresponds to
+100ms-long control steps. Finally, if you set the
+\texttt{random\_seed} attribute, the simulation will be
+repeatable. Noise will be calculated on the basis of the random seed
+you set. If you don't set it or choose zero as value, the internal
+computer clock is used to find a random seed and a warning is
+displayed at run-time.
+
+\subsection{The \texttt{controllers} Section}
+In the \texttt{controllers} section you specify the robot controllers
+to use for the experiment:
+\begin{lstlisting}
+<controllers>
+
+  <my_controller_1 id="c1" library="/path/to/libmy_controller_1.so">
+    <actuators>
+      ...
+    </actuators>
+    <sensors>
+      ...
+    </sensors>
+    <parameters>
+      ...
+    </parameters>
+  </my_controller_1>
+
+  <my_controller_2 id="c2" library="/path/to/libmy_controller_2.so">
+    ...
+  </my_controller_2>
+
+</controllers>
+\end{lstlisting}
+In Chapter~\ref{cpt:controllers} we said that controllers are
+registered in the system through the \texttt{REGISTER\_CONTROLLER()}
+macro. The string identifier you specify as parameter to the macro is used
+in the XML file as tag (here, \texttt{my\_controller\_1} and
+\texttt{my\_controller\_2}).
+
+The configuration of each controller is performed specifying the
+following information:
+\begin{itemize}
+\item a unique identifier, used in the \texttt{arena} section to bind
+  robots to controllers (attribute \texttt{id});
+\item the complete path to the plug-in library file (attribute
+  \texttt{library});
+\item which actuators and sensors to use, along with their
+  configuration. As shown in the above example, a sub-section is
+  dedicated to each (\texttt{actuators} and \texttt{sensors});
+\item each robot controller accepts an XML sub-tree that is (optionally)
+  parsed by the \texttt{Init()} method. The passed tree is the
+  \texttt{parameters} sub-section.
+\end{itemize}
+
+\subsection{The \texttt{arena} Section}
+\subsection{The \texttt{physics\_engines} Section}
+\subsection{The \texttt{arena\_physics} Section}
+\subsection{The \texttt{visualization} Section}
+\subsection{The \texttt{loop\_functions} Section}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "argos_user_manual"
+%%% End: 

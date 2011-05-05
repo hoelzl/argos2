@@ -17,6 +17,13 @@ include(CPack)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_SOURCE_DIR}/../common/cmake)
 
+if( NOT ARGOS_COMPILE_REAL_SWARMANOID )
+  find_package(GSL REQUIRED)
+  add_definitions(${CMAKE_GSL_CXX_FLAGS})
+  include_directories(${GSL_INCLUDE_DIR})
+  link_directories(${GSL_LINK_DIRECTORIES})
+endif( NOT ARGOS_COMPILE_REAL_SWARMANOID )
+
 find_package(Pthreads)
 if(NOT PTHREADS_FOUND)  
   message(FATAL_ERROR "Required library pthread not found.")

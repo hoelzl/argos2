@@ -187,7 +187,13 @@ namespace argos {
    void CProfiler::CollectThreadResourceUsage() {
       pthread_mutex_lock(&m_tThreadResourceUsageMutex);
       ::rusage tResourceUsage;
+#ifdef __APPLE__
+      /* FIXME: This is badly broken, but I don't know how to obtain
+	 the equivalent of RUSAGE_THREAD on MacOS. --tc */
+      getrusage(RUSAGE_SELF, &tResourceUsage);
+#else
       ::getrusage(::RUSAGE_THREAD, &tResourceUsage);
+#endif
       m_vecThreadResourceUsage.push_back(tResourceUsage);
       pthread_mutex_unlock(&m_tThreadResourceUsageMutex);
    }
@@ -210,7 +216,11 @@ namespace argos {
       DumpResourceUsageHumanReadable(m_cOutFile, m_tResourceUsageEnd);
       m_cOutFile << std::endl << "[process overall]" << std::endl << std::endl;
       ::rusage tResourceUsage;
+#ifdef __APPLE__
+      getrusage(RUSAGE_SELF, &tResourceUsage);
+#else
       ::getrusage(::RUSAGE_SELF, &tResourceUsage);
+#endif
       DumpResourceUsageHumanReadable(m_cOutFile, tResourceUsage);
       if(! m_vecThreadResourceUsage.empty()) {
          for(size_t i = 0; i < m_vecThreadResourceUsage.size(); ++i) {
@@ -238,7 +248,11 @@ namespace argos {
       DumpResourceUsageAsTableRow(m_cOutFile, m_tResourceUsageEnd);
       m_cOutFile << std::endl << "Overall 0 0 ";
       ::rusage tResourceUsage;
+#ifdef __APPLE__
+      getrusage(RUSAGE_SELF, &tResourceUsage);
+#else
       ::getrusage(::RUSAGE_SELF, &tResourceUsage);
+#endif
       DumpResourceUsageAsTableRow(m_cOutFile, tResourceUsage);
       if(! m_vecThreadResourceUsage.empty()) {
          for(size_t i = 0; i < m_vecThreadResourceUsage.size(); ++i) {
@@ -268,14 +282,22 @@ namespace argos {
 /****************************************/
 
    void CProfiler::StartCPUProfiler() {
+#ifdef __APPLE__
+      getrusage(RUSAGE_SELF, &m_tResourceUsageStart);
+#else
       ::getrusage(::RUSAGE_SELF, &m_tResourceUsageStart);
+#endif
    }
 
 /****************************************/
 /****************************************/
 
    void CProfiler::StopCPUProfiler() {
+#ifdef __APPLE__
+      getrusage(RUSAGE_SELF, &m_tResourceUsageEnd);
+#else
       ::getrusage(::RUSAGE_SELF, &m_tResourceUsageEnd);
+#endif
    }
 
 /****************************************/

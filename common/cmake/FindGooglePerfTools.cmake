@@ -22,6 +22,7 @@ FIND_PATH(GOOGLEPERFTOOLS_INCLUDE_DIR
   PATHS
   /usr/include/google
   /usr/local/include/google
+  /opt/local/include/google
   DOC "Google PerfTools header location"
 )
 
@@ -34,6 +35,7 @@ FIND_LIBRARY(GOOGLEPERFTOOLS_LIBRARY
   PATHS
   /usr/lib
   /usr/local/lib
+  /opt/local/lib
   DOC "Google PerfTools library location"
 )
 

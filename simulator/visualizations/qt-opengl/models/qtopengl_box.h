@@ -27,7 +27,11 @@ namespace argos {
    class CBoxEntity;
 }
 
+#ifdef __APPLE__
+#include <gl.h>
+#else
 #include <GL/gl.h>
+#endif
 
 namespace argos {
 

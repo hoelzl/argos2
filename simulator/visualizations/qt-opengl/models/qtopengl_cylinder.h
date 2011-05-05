@@ -27,7 +27,12 @@ namespace argos {
    class CCylinderEntity;
 }
 
+
+#ifdef __APPLE__
+#include <gl.h>
+#else
 #include <GL/gl.h>
+#endif
 
 namespace argos {
 

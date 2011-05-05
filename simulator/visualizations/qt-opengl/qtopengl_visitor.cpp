@@ -33,7 +33,11 @@
 #include <argos2/simulator/space/entities/controllable_entity.h>
 #include <argos2/simulator/space/entities/epuck_entity.h>
 #include <argos2/simulator/visualizations/qt-opengl/qtopengl_user_functions.h>
+#ifdef __APPLE__
+#include <gl.h>
+#else
 #include <GL/gl.h>
+#endif
 
 namespace argos {
 

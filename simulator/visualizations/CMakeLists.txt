@@ -2,7 +2,7 @@ add_subdirectory(text)
 add_subdirectory(povray)
 
 # Check for QT4
-set(ARGOS_COMPILE_QTOPENGL false)
+set(ARGOS_COMPILE_QTOPENGL false) 
 set(QT_USE_QTOPENGL true)
 find_package(Qt4)
 if(QT4_FOUND)
@@ -20,6 +20,11 @@ if(QT4_FOUND)
           
           # All the required libraries are OK
           set(ARGOS_COMPILE_QTOPENGL true)
+	  if( APPLE )
+	    message("Including Dir:")
+	    message(${OPENGL_INCLUDE_DIR}/Headers)
+	    include_directories(${OPENGL_INCLUDE_DIR}/Headers)
+	  endif( APPLE )
           
           # Now check for SDL (optional)
           set(SDL_BUILDING_LIBRARY true)
@@ -68,7 +73,8 @@ target_link_libraries(argos2_simulator_visualizations
   argos2_simulator_povray_renderer)
 if(ARGOS_COMPILE_QTOPENGL)
   target_link_libraries(argos2_simulator_visualizations
-    argos2_simulator_qtopengl_renderer)
+    argos2_simulator_qtopengl_renderer
+    ${OPENGL_LIBRARIES})
 endif(ARGOS_COMPILE_QTOPENGL)
 
 

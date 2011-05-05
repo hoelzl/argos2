@@ -1,3 +1,7 @@
+if( APPLE )
+  link_directories(/opt/local/lib)
+endif( APPLE )
+
 #########################################################
 # Base headers
 #

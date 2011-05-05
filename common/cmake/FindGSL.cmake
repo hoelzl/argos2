@@ -75,6 +75,7 @@ ELSE(WIN32)
     FIND_PROGRAM(GSL_CONFIG gsl-config
       ${GSL_CONFIG_PREFER_PATH}
       /usr/bin/
+      /opt/local/bin
       )
     # MESSAGE("DBG GSL_CONFIG ${GSL_CONFIG}")
     

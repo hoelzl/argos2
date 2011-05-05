@@ -80,6 +80,7 @@ set(argos2_common_utility_IMPLEMENTATIONS
 
 if( NOT ARGOS_COMPILE_REAL_SWARMANOID )
   add_definitions(${CMAKE_GSL_CXX_FLAGS})
+  include_directories(${GSL_INCLUDE_DIR})
   link_directories(${GSL_LINK_DIRECTORIES})
 endif( NOT ARGOS_COMPILE_REAL_SWARMANOID )
 

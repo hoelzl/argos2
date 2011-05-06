@@ -8,3 +8,4 @@ CMakeScripts/
 CPackConfig.cmake
 Debug/
 Release/
+argos2_simulator-2.0.0-Darwin.tar.bz2

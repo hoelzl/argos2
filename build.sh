@@ -4,7 +4,7 @@ function build_common() {
     # create build directory
     mkdir -p build/common/simulator; cd build/common/simulator || { echo "Error: directory build/common/simulator does not exist, and the attemp to create it failed: permissions trouble?" 1>&2; exit 1; }
     # configure package
-    echo "cmake ../../../common -DCMAKE_INSTALL_PREFIX=/usr -G 'Eclipse CDT4 - Unix Makefiles' -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} || { echo 'cmake failed' 1>&2; exit 1; }" | sh
+    echo "cmake ../../../common -DCMAKE_INSTALL_PREFIX=${PREFIX} -G 'Eclipse CDT4 - Unix Makefiles' -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} || { echo 'cmake failed' 1>&2; exit 1; }" | sh
     
     # compile
     make || { echo "make failed" 1>&2; exit 1; }
@@ -14,12 +14,13 @@ function build_simulator() {
     # create build directory
     mkdir -p build/simulator; cd build/simulator || { echo "Error: directory build/simulator does not exist, and the attemp to create it failed: permissions trouble?" 1>&2; exit 1; }
     # configure package
-    echo "cmake ../../simulator -DCMAKE_INSTALL_PREFIX=/usr -G 'Eclipse CDT4 - Unix Makefiles' -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} || { echo 'cmake failed' 1>&2; exit 1; }" | sh
+    echo "cmake ../../simulator -DCMAKE_INSTALL_PREFIX=${PREFIX} -G 'Eclipse CDT4 - Unix Makefiles' -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} || { echo 'cmake failed' 1>&2; exit 1; }" | sh
     
     # compile
     make || { echo "make failed" 1>&2; exit 1; }
 }
 
+PREFIX="/usr/local"
 BUILDTYPE="release"
 while [ $# -gt 0 ]; do
     OPTION="$1"

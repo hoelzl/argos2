@@ -33,6 +33,11 @@ if( ARGOS_COMPILE_REAL_SWARMANOID )
 
 else( ARGOS_COMPILE_REAL_SWARMANOID )
 
+  find_package(GSL REQUIRED)
+  add_definitions(${CMAKE_GSL_CXX_FLAGS})
+  include_directories(${GSL_INCLUDE_DIR})
+  link_directories(${GSL_LINK_DIRECTORIES})
+
   find_package(GooglePerfTools)
 
 endif( ARGOS_COMPILE_REAL_SWARMANOID )

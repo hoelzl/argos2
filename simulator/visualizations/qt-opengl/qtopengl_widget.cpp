@@ -232,13 +232,16 @@ namespace argos {
       if(doubleBuffer()) swapBuffers();
       else glFlush();
       /* Execute overlay drawing */
+      /* FIXME: This causes the drawing problems on Mac OS X */
+#ifndef __APPLE__
       QPainter cPainter(this);
       if(m_bAntiAliasing) {
          cPainter.setRenderHint(QPainter::Antialiasing);
          cPainter.setRenderHint(QPainter::TextAntialiasing);
       }
       m_cUserFunctions.DrawOverlay(cPainter);
-      cPainter.end();      
+      cPainter.end();
+#endif    
       /* Grab frame, if necessary */
       if(m_sFrameGrabData.Grabbing) {
          QString strFileName = QString("%1/%2%3.%4")

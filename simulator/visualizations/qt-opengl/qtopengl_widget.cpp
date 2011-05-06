@@ -229,11 +229,15 @@ namespace argos {
          glDisable(GL_MULTISAMPLE);
       }
       /* Draw the frame, either by swapping the buffers or flushing */
+
+      /* This seems to be wrong.  At least it causes problems on Mac
+	 OS X, and the documentation of QPainter::end() also claim
+	 that it takes care of swapping the buffers. --tc */
+#ifndef __APPLE__
       if(doubleBuffer()) swapBuffers();
       else glFlush();
+#endif
       /* Execute overlay drawing */
-      /* FIXME: This causes the drawing problems on Mac OS X */
-#ifndef __APPLE__
       QPainter cPainter(this);
       if(m_bAntiAliasing) {
          cPainter.setRenderHint(QPainter::Antialiasing);
@@ -241,7 +245,6 @@ namespace argos {
       }
       m_cUserFunctions.DrawOverlay(cPainter);
       cPainter.end();
-#endif    
       /* Grab frame, if necessary */
       if(m_sFrameGrabData.Grabbing) {
          QString strFileName = QString("%1/%2%3.%4")

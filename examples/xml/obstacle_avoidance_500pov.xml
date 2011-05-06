@@ -7,9 +7,9 @@
   <framework>
     <system threads="0" />
     <!-- old value: random_seed="125" -->
-    <experiment length="0.1"
+    <experiment length="10"
                 ticks_per_second="10"
-                random_seed="132" />
+                random_seed="125" />
   </framework>
 
   <!-- *************** -->
@@ -132,7 +132,7 @@
       </environment>
       <scene step="0">
         <camera type="normal"
-		position="-2.8,0.8,0.5" look_at="2.8,0.8,0"
+		position="-9.8,0.8,0.5" look_at="-2.8,0.8,0"
 		lens_focal_length="20"/>
       </scene>
     </povray_render>

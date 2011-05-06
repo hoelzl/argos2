@@ -1,0 +1,1 @@
+add_library(footbot_obstacle_avoidance MODULE footbot_obstacle_avoidance.cpp)

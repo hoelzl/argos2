@@ -1,0 +1,3 @@
+include_directories(${CMAKE_SOURCE_DIR}/controllers)
+add_subdirectory(footbot_obstacle_avoidance)
+add_subdirectory(footbot_synchronization)

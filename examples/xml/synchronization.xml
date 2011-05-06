@@ -1,0 +1,107 @@
+<?xml version="1.0" ?>
+<argos-configuration>
+
+  <!-- ************************* -->
+  <!-- * General configuration * -->
+  <!-- ************************* -->
+  <framework>
+    <system threads="0" />
+    <experiment length="0"
+                ticks_per_second="10"
+                random_seed="124" />
+  </framework>
+
+  <!-- *************** -->
+  <!-- * Controllers * -->
+  <!-- *************** -->
+  <controllers>
+
+    <footbot_synchronization_controller id="fsc"
+                                        library="build/controllers/footbot_synchronization/libfootbot_synchronization.so">
+      <actuators>
+        <footbot_leds implementation="default" />
+      </actuators>
+      <sensors>
+        <footbot_omnidirectional_camera implementation="rot_z_only" show_rays="false" />
+      </sensors>
+      <parameters />
+    </footbot_synchronization_controller>
+
+  </controllers>
+
+  <!-- *********************** -->
+  <!-- * Arena configuration * -->
+  <!-- *********************** -->
+  <arena size="2, 2, 1">
+
+    <box id="wall_north"
+         position="0,1,0.25"
+         orientation="0,0,0"
+         size="2,0.1,0.5"
+         movable="false" />
+    <box id="wall_south"
+         position="0,-1,0.25"
+         orientation="0,0,0"
+         size="2,0.1,0.5"
+         movable="false" />
+    <box id="wall_east"
+         position="1,0,0.25"
+         orientation="0,0,0"
+         size="0.1,2,0.5"
+         movable="false" />
+    <box id="wall_west"
+         position="-1,0,0.25"
+         orientation="0,0,0"
+         size="0.1,2,0.5"
+         movable="false" />
+
+    <!--
+       Distribute 16 entities in a 4x4 grid on the ground,
+       all facing along the X axis -->
+    <distribute>
+      <position method="grid"
+                center="0,0,0"
+                distances="0.3,0.3,0"
+                layout="4,4,1"
+                />
+      <orientation method="constant" values="0,0,0" />
+      <entity quantity="16" max_trials="1">
+        <foot-bot id="fb"
+                  controller="fsc" />
+      </entity>
+    </distribute>
+
+  </arena>
+
+  <!-- ******************* -->
+  <!-- * Physics engines * -->
+  <!-- ******************* -->
+  <physics_engines>
+    <dynamics2d id="dyn2d" />
+  </physics_engines>
+
+  <!-- ************************************ -->
+  <!-- * Arena -> Physics Engines mapping * -->
+  <!-- ************************************ -->
+  <arena_physics>
+    <engine id="dyn2d">
+      <!--
+         You can use a regular expression to bind a set of entities.
+         See 'man 3 regex' to know more about regular expressions.
+        -->
+      <entity id="fb_[[:digit:]]*" />
+      <entity id="wall_north" />
+      <entity id="wall_south" />
+      <entity id="wall_east" />
+      <entity id="wall_west" />
+    </engine>
+  </arena_physics>
+
+  <!-- ****************** -->
+  <!-- * Visualization * -->
+  <!-- ****************** -->
+  <visualization>
+    <qtopengl_render splash="false" />
+  </visualization>
+
+</argos-configuration>

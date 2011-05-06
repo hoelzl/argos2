@@ -1,0 +1,186 @@
+<?xml version="1.0" ?>
+<argos-configuration>
+
+  <!-- ************************* -->
+  <!-- * General configuration * -->
+  <!-- ************************* -->
+  <framework>
+    <!--
+        System configuration:
+        - threads: the number of slave threads to parallelize the computation.
+                   For less than 100 robots thread management is not beneficial, so
+                   here we set it to 0. When set to 0, it means that the computation is
+                   not parallelized: the main thread does everything.
+    -->
+    <system threads="0" />
+    <!--
+        Experiment configuration:
+        - length: total experiment time in seconds (0 means the experiment has no time limit)
+        - ticks_per_second: number of ticks per second (int value)
+        - random_seed: seed of the main random number generator. If unset or set to
+                       zero, this value is taken from the clock and a warning message
+                       is displayed.
+    -->
+    <experiment length="0"
+                ticks_per_second="10"
+                random_seed="124" />
+  </framework>
+
+  <!-- *************** -->
+  <!-- * Controllers * -->
+  <!-- *************** -->
+  <controllers>
+
+    <!-- 
+       Here you list the controllers to be used in the experiment.
+       The XML tag is set by the REGISTER_CONTROLLER(class, "tag") macro.
+       You find it in the .cpp file of your controller.
+       For this example, the macro is called in controllers/footbot_obstacle_avoidance.cpp:100.
+      -->
+
+    <!--
+       The attributes are:
+       - id: a unique a identifier for this controller, to be used in the subsequent
+             <arena> section to say which robots use which controller
+       - library: the path to the compiled library containing you controller.
+      -->
+    <footbot_obstacle_avoidance_controller id="foac"
+                                           library="build/controllers/footbot_obstacle_avoidance/libfootbot_obstacle_avoidance.so">
+      <!--
+         The <actuators> section contains a list of the actuators used by this controller.
+         If you forget a to mention an actuator here and then request it in the controller,
+         an error occurs.
+         For a list of the possible actuators, type at the command prompt:
+         $ launch_argos -q actuators
+
+         Multiple implementations of an actuator are possible. To identify which one
+         you want to use, pass it in the 'implementation' attribute below. When you
+         type the 'argos -q' command, the implementation is in the square brackets
+         following the name of the device:
+
+         $ launch_argos -q actuators
+         ...
+         footbot_wheels [default]
+         ...
+        -->
+      <actuators>
+        <footbot_wheels implementation="default" />
+        <footbot_leds   implementation="default" />
+      </actuators>
+      <!--
+         The <sensors> section contains a list of the sensors used by this controller.
+         If you forget a to mention a sensor here and then request it in the controller,
+         an error occurs.
+         For a list of the possible sensors, type at the command prompt:
+         $ launch_argos -q sensors
+        -->
+      <sensors>
+        <footbot_proximity implementation="rot_z_only" show_rays="true" calibrate="true" />
+      </sensors>
+      <!--
+         The <parameters> section is passed as-is to the controller's Init() function.
+         The user, writing the controller, defines how it is organized.
+         To understand what these parameters are for, check the controller's header file in
+         controllers/footbot_obstacle_avoidance/footbot_obstacle_avoidance.h.
+        -->
+      <parameters alpha="7.5" delta="0.1" velocity="5" />
+    </footbot_obstacle_avoidance_controller>
+
+  </controllers>
+
+  <!-- *********************** -->
+  <!-- * Arena configuration * -->
+  <!-- *********************** -->
+  <!--
+     Here you place all the objects in the arena.
+     The 'size' attribute contains the size of the arena around the origin.
+     To get help about which entities are available, type at the command prompt:
+     
+     $ launch_argos -q entities
+
+     and to get help about a specific entity (for instance, the box)
+
+     $ launch_argos -q box
+    -->
+  <arena size="2, 2, 1">
+
+    <!-- Place four boxes in a square to delimit the arena -->
+    <box id="wall_north"
+         position="0,1,0.25"
+         orientation="0,0,0"
+         size="2,0.1,0.5"
+         movable="false" />
+    <box id="wall_south"
+         position="0,-1,0.25"
+         orientation="0,0,0"
+         size="2,0.1,0.5"
+         movable="false" />
+    <box id="wall_east"
+         position="1,0,0.25"
+         orientation="0,0,0"
+         size="0.1,2,0.5"
+         movable="false" />
+    <box id="wall_west"
+         position="-1,0,0.25"
+         orientation="0,0,0"
+         size="0.1,2,0.5"
+         movable="false" />
+
+    <!-- Place a foot-bot in the origin and bind it to the controller -->
+    <foot-bot id="fb_0"
+              position="0,0,0"
+              orientation="0,0,0"
+              controller="foac" />
+
+  </arena>
+
+  <!-- ******************* -->
+  <!-- * Physics engines * -->
+  <!-- ******************* -->
+  <!--
+     In ARGoS, multiple physics engines can run at the same time.
+     In this section you say which engines to use for the experiment.
+     To know which engines are available, type at the command prompt:
+
+     $ launch_argos -q physics_engines
+    -->
+  <physics_engines>
+    <!--
+       Use a 2D dynamics engine. The id is necessary for the subsequent <arena_physics> section
+       to say which physics engine simulates which entity.
+      -->
+    <dynamics2d id="dyn2d" />
+  </physics_engines>
+
+  <!-- ************************************ -->
+  <!-- * Arena -> Physics Engines mapping * -->
+  <!-- ************************************ -->
+  <!--
+     Here you say which physics engine simulates which entity.
+    -->
+  <arena_physics>
+    <engine id="dyn2d">
+      <entity id="fb_0" />
+      <entity id="wall_north" />
+      <entity id="wall_south" />
+      <entity id="wall_east" />
+      <entity id="wall_west" />
+    </engine>
+  </arena_physics>
+
+  <!-- ****************** -->
+  <!-- * Visualization * -->
+  <!-- ****************** -->
+  <!--
+     Here you specify which visualization to use.
+     You can also not specify a visualization at all, in which case ARGoS will run without showing anything.
+     Having no visualization is useful when you run ARGoS in a batch of experiments to collect statistics.
+     To know which visualizations are available, type at the command prompt:
+
+     $ launch_argos -q visualizations
+    -->
+  <visualization>
+    <qtopengl_render splash="false" />
+  </visualization>
+
+</argos-configuration>

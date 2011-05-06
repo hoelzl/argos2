@@ -1,0 +1,142 @@
+<?xml version="1.0" ?>
+<argos-configuration>
+
+  <!-- ************************* -->
+  <!-- * General configuration * -->
+  <!-- ************************* -->
+  <framework>
+    <system threads="0" />
+    <!-- old value: random_seed="125" -->
+    <experiment length="0.1"
+                ticks_per_second="10"
+                random_seed="132" />
+  </framework>
+
+  <!-- *************** -->
+  <!-- * Controllers * -->
+  <!-- *************** -->
+  <controllers>
+
+    <footbot_obstacle_avoidance_controller id="foac"
+                                           library="build/controllers/footbot_obstacle_avoidance/libfootbot_obstacle_avoidance.so">
+      <actuators>
+        <footbot_wheels implementation="default" />
+        <footbot_leds   implementation="default" />
+      </actuators>
+      <sensors>
+        <footbot_proximity implementation="rot_z_only" show_rays="true" calibrate="true" />
+      </sensors>
+      <parameters alpha="7.5" delta="0.1" velocity="5" />
+    </footbot_obstacle_avoidance_controller>
+
+  </controllers>
+
+  <!-- *********************** -->
+  <!-- * Arena configuration * -->
+  <!-- *********************** -->
+  <arena size="20, 20, 1">
+
+    <box id="wall_north"
+         position="0,10,0.25"
+         orientation="0,0,0"
+         size="20,0.1,0.5"
+         movable="false" />
+    <box id="wall_south"
+         position="0,-10,0.25"
+         orientation="0,0,0"
+         size="20,0.1,0.5"
+         movable="false" />
+    <box id="wall_east"
+         position="10,0,0.25"
+         orientation="0,0,0"
+         size="0.1,20,0.5"
+         movable="false" />
+    <box id="wall_west"
+         position="-10,0,0.25"
+         orientation="0,0,0"
+         size="0.1,20,0.5"
+         movable="false" />
+
+    <!--
+       You can distribute entities randomly. Here, we distribute
+       the entities in this way:
+       - the position is uniformly distributed
+         on the ground, in the square whose corners are (-1,-1) and (1,1)
+       - the orientations are non-zero only when rotating around Z and chosen
+         from a gaussian distribution, whose mean is zero degrees and
+         standard deviation is 360 degrees.
+      -->
+    <distribute>
+      <position method="uniform" min="-10,-10,0" max="10,10,0" />
+      <orientation method="gaussian" mean="0,0,0" std_dev="360,0,0" />
+      <entity quantity="500" max_trials="100">
+        <foot-bot id="fb"
+                  controller="foac" />
+      </entity>
+    </distribute>
+
+  </arena>
+
+  <!-- ******************* -->
+  <!-- * Physics engines * -->
+  <!-- ******************* -->
+  <physics_engines>
+    <dynamics2d id="dyn2d" />
+  </physics_engines>
+
+  <!-- ************************************ -->
+  <!-- * Arena -> Physics Engines mapping * -->
+  <!-- ************************************ -->
+  <arena_physics>
+    <engine id="dyn2d">
+      <!--
+         You can use a regular expression to bind a set of entities.
+         See 'man 3 regex' to know more about regular expressions.
+        -->
+      <entity id="fb_[[:digit:]]*" />
+      <entity id="wall_north" />
+      <entity id="wall_south" />
+      <entity id="wall_east" />
+      <entity id="wall_west" />
+    </engine>
+  </arena_physics>
+
+  <!-- ****************** -->
+  <!-- * Visualization * -->
+  <!-- ****************** -->
+  <visualization>
+    <povray_render id="povray" output_folder="/Users/tc/Prog/Robots/Tests/Visualization/">
+      <environment type="standard"> 
+        <light_source position="2,-6,6"
+                      fade_distance="4"
+                      shadowless="false"/>
+        <light_source position="-2,-6,3"
+                      fade_distance="4"
+                      color="Yellow"
+                      shadowless="true"/>
+        <light_source position="0.1,2,0.5"
+                      fade_distance="5"
+                      shadowless="true"/>
+        <box id="wall_north" type="color">
+          <color povray="LightGray"/>
+        </box>
+        <box id="wall_south" type="color">
+          <color povray="LightGray"/>
+        </box>
+        <box id="wall_east" type="color">
+          <color povray="LightGray"/>
+        </box>
+        <box id="wall_west" type="color">
+          <color povray="LightGray"/>
+        </box>
+      </environment>
+      <scene step="0">
+        <camera type="normal"
+		position="-2.8,0.8,0.5" look_at="2.8,0.8,0"
+		lens_focal_length="20"/>
+      </scene>
+    </povray_render>
+  </visualization>
+
+
+</argos-configuration>

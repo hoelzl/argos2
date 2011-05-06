@@ -1,0 +1,127 @@
+<?xml version="1.0" ?>
+<argos-configuration>
+
+  <!-- ************************* -->
+  <!-- * General configuration * -->
+  <!-- ************************* -->
+  <framework>
+    <system threads="0" />
+    <!-- old value: random_seed="125" -->
+    <experiment length="0"
+                ticks_per_second="10"
+                random_seed="132" />
+  </framework>
+
+  <!-- *************** -->
+  <!-- * Controllers * -->
+  <!-- *************** -->
+  <controllers>
+
+    <footbot_obstacle_avoidance_controller id="foac"
+                                           library="build/controllers/footbot_obstacle_avoidance/libfootbot_obstacle_avoidance.so">
+      <actuators>
+        <footbot_wheels implementation="default" />
+        <footbot_leds   implementation="default" />
+      </actuators>
+      <sensors>
+        <footbot_proximity implementation="rot_z_only" show_rays="true" calibrate="true" />
+      </sensors>
+      <parameters alpha="7.5" delta="0.1" velocity="5" />
+    </footbot_obstacle_avoidance_controller>
+
+  </controllers>
+
+  <!-- *********************** -->
+  <!-- * Arena configuration * -->
+  <!-- *********************** -->
+  <arena size="20, 20, 1">
+
+    <box id="wall_north"
+         position="0,10,0.25"
+         orientation="0,0,0"
+         size="20,0.1,0.5"
+         movable="false" />
+    <box id="wall_south"
+         position="0,-10,0.25"
+         orientation="0,0,0"
+         size="20,0.1,0.5"
+         movable="false" />
+    <box id="wall_east"
+         position="10,0,0.25"
+         orientation="0,0,0"
+         size="0.1,20,0.5"
+         movable="false" />
+    <box id="wall_west"
+         position="-10,0,0.25"
+         orientation="0,0,0"
+         size="0.1,20,0.5"
+         movable="false" />
+
+    <!--
+       You can distribute entities randomly. Here, we distribute
+       the entities in this way:
+       - the position is uniformly distributed
+         on the ground, in the square whose corners are (-1,-1) and (1,1)
+       - the orientations are non-zero only when rotating around Z and chosen
+         from a gaussian distribution, whose mean is zero degrees and
+         standard deviation is 360 degrees.
+      -->
+    <distribute>
+      <position method="uniform" min="-10,-10,0" max="10,10,0" />
+      <orientation method="gaussian" mean="0,0,0" std_dev="360,0,0" />
+      <entity quantity="500" max_trials="100">
+        <foot-bot id="fb"
+                  controller="foac" />
+      </entity>
+    </distribute>
+
+  </arena>
+
+  <!-- ******************* -->
+  <!-- * Physics engines * -->
+  <!-- ******************* -->
+  <physics_engines>
+    <dynamics2d id="dyn2d" />
+  </physics_engines>
+
+  <!-- ************************************ -->
+  <!-- * Arena -> Physics Engines mapping * -->
+  <!-- ************************************ -->
+  <arena_physics>
+    <engine id="dyn2d">
+      <!--
+         You can use a regular expression to bind a set of entities.
+         See 'man 3 regex' to know more about regular expressions.
+        -->
+      <entity id="fb_[[:digit:]]*" />
+      <entity id="wall_north" />
+      <entity id="wall_south" />
+      <entity id="wall_east" />
+      <entity id="wall_west" />
+    </engine>
+  </arena_physics>
+
+  <!-- ****************** -->
+  <!-- * Visualization * -->
+  <!-- ****************** -->
+  <visualization>
+    <qtopengl_render splash="false">
+      <camera>
+	<placement idx="0" position="-2.8,0.8,0.5" look_at="2.8,0.8,0" lens_focal_length="20" />
+	<placement idx="1" position="-3.4,0.5,0.5" look_at="3.4,0.5,0" lens_focal_length="20" />
+	<placement idx="2" position="-3.4,0.5,1.0" look_at="-2.5,0.5,0.5" lens_focal_length="20" />
+	<placement idx="3" position="-3.4,0.5,1.5" look_at="-1.5,0.5,0.5" lens_focal_length="20" />
+	<placement idx="4" position="-2.7,0.3,0.5" look_at="2.7,0.3,0" lens_focal_length="20" />
+	<placement idx="5" position="-2.7,0.3,1.5" look_at="2.7,0.3,0.5" lens_focal_length="20" />
+	<placement idx="6" position="-2,0,2" look_at="0,0,0" lens_focal_length="20" />
+	<placement idx="7" position="-2,0,2" look_at="0,0,0" lens_focal_length="20" />
+	<placement idx="8" position="-2,0,2" look_at="0,0,0" lens_focal_length="20" />
+	<placement idx="9" position="-2,0,2" look_at="0,0,0" lens_focal_length="20" />
+	<placement idx="10" position="-2,0,2" look_at="0,0,0" lens_focal_length="20" />
+	<placement idx="11" position="-2,0,2" look_at="0,0,0" lens_focal_length="20" />
+      </camera>
+    </qtopengl_render>
+  </visualization>
+
+
+</argos-configuration>
